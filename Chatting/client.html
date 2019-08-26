@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+
+        var newPostUrl = "";  // spring 에서 접근하기위해 선언 해준다.. function 바깥족에 있는 변수는 전역변수, 안쪽에 있는 변수는 지역변수. 
+        
+        $().ready(function(){
+
+           //var newPostUrl = "${newPostUrl}"; // spring이 주는 data를 받을수가 있다. spring에 연결되어있기 때문에 
+            var name = prompt("이름을 입력하세요.");
+            var myId = "";
+            var receiver = "all";
+            var socket = io.connect('http://localhost:3000');
+            
+
+            // 대화방 접속
+            socket.emit('join',name);
+
+            // 고유 ID 받기
+            socket.on("getMyId",function(id){
+                myId = id; // 파라미터로 전달받은 id를 myId에 넣어준다.
+        
+            });
+
+            // 접속 사용자 보여주기
+            socket.on("displayAllUsers",function(allUsers){
+                console.log(allUsers);
+               
+                // 접속자 현황 초기화
+                $("#connectedUsers").html("");
+               
+                // 접속자 현황 갱신
+                for ( var i in allUsers ){
+                     $("#connectedUsers").append($("<div data-id='" + allUsers[i].id + "'>"+allUsers[i].name+"</div>"));
+                }
+                $("#connectedUsers").append( $("<div data-id='all'>전체에게 보내기</div>") );
+               
+            });
+
+            $("#connectedUsers").on("click","div", function(){
+                alert($(this).data("id"));
+                receiver = $(this).data("id");
+            });
+            
+            // 메세지 전달 받기 
+            socket.on("receive",function(data){
+            
+                var message = $("<div>"+data.name+" | "+ data.chat  + "</div>");
+
+                if( myId == data.sender ){
+                    message.css({
+                        "color" : "#FF0000",
+                    });
+                }
+                else if ( myId == data.receiver){
+                    message.css({
+                        "color" : "blue"
+                    })
+                }
+
+                $("#chattingBox").append(message);
+        
+            });
+            
+            socket.on("popupNews",function(newPostUrl){
+                if ( confirm("새로운글이 등록 됐습니다. 확인 하실?") ){
+                    location.href= newPostUrl;
+                }
+            });
+            
+            $("#hiddenButton").click(function(){
+                socket.emit("newPost",newPostUrl);
+            });
+
+            $("#button").click(function(){
+                var chat = $("#chat").val();
+                //socket.emit("broadcast",chat);
+              
+                socket.emit("broadcast",{
+                    "name" : name,
+                    "chat" : chat,
+                    "sender" : myId,
+                    "receiver" : receiver
+                });
+
+                $("#chat").val("");
+                $("#chat").focus();
+            });
+            $("#chat").keypress(function(event){
+                if(event.which == 13){
+                    $("#button").click();
+                    return false;
+                }
+            });
+        });
+    </script>
+    
+<body>
+    
+    <input type="text" id="chat"/>
+    <input type="button" id="button" value="전송"/>
+    <div id="chattingBox"></div><hr/>
+    <div id="connectedUsers"></div>
+
+    <div id="hiddenButton"></div>
+</body>
+</head>
+</html>

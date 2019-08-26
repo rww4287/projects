@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        $().ready(function () {
+            var socket = io.connect(); // server의 connection 이벤트를 수행합니다.
+            socket.on("receive",function (data) {
+                //alert(data);
+                $("#chatMessages").append( $("<div>"+data+"</div>") );
+            });
+            $("#button").click(function () {
+                var chat = $("#chat").val();
+                socket.emit("broadcast",chat);
+                $("#chat").val("");
+                $("#chat").focus();
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+    <input type="text" name="chat" id="chat"/>
+    <input type="button" id="button" value="전송" />
+
+    <div id="chatMessages"></div>
+</body>
+</html>
+
