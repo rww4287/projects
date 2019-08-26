@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TestDao">
+
+<!-- 	<resultMap type="MovieVO" id="MovieMap">
+		<id column="id" property="movieId"/>
+		<result column="name" property="movieName"/>
+		<result column="year" property="movieYear"/>
+		<result column="poster" property="moviePoster"/>
+	
+		<collection select="TripPartDao.getTripPartByTripId" 
+							property="tripPartVO"
+							column="TR_ID" 	
+							javaType="java.util.ArrayList"
+							ofType="TripPartVO">
+		</collection>
+	</resultMap>
+	 -->
+    <select id="getAllMoiveList" resultType="MovieVO">
+		SELECT movieId movieId, name movieName, `year` movieYear, director movieDirector, poster moviePoster
+		FROM movie.movies
+    </select>
+   
+    <select id="getOneMovie" resultType="MovieVO" parameterType="string">
+		SELECT movieId movieId, name movieName, `year` movieYear, director movieDirector, poster moviePoster
+		FROM movie.movies
+		WHERE movieId = #{movieId}
+    </select>
+    
+    <delete id="deleteOneMovie" parameterType="string">
+    	DELETE FROM movie.movies
+		WHERE movieId= #{movieId}
+    </delete>
+
+    <insert id="insertOneMovie"  useGeneratedKeys="true" keyProperty="movieId" parameterType="MovieVO">
+    	INSERT INTO movie.movies (name, `year`, director, poster, createdAt, updatedAt)
+				VALUES(#{movieName}, #{movieYear}, #{movieDirector}, #{moviePoster}, now() , now());
+    </insert>
+  
+    <update id="updateOneMovie" parameterType="MovieVO">
+	    UPDATE movie.movies
+		SET name=#{movieName}, 
+			`year`=#{movieYear}, 
+			director=#{movieDirector},
+			poster=#{moviePoster},
+			updatedAt= now()
+		WHERE movieId= #{movieId}
+    
+    </update>
+    
+    <insert id="insertOneReply" parameterType="ReplyVO">
+		INSERT INTO movie.Reply (writer, movieId, content, createdAt)
+		VALUES(#{replyWriter}, #{movieId}, #{replyContent}, now());
+    </insert>
+
+	<select id="getReplyListByMovieId" resultType="ReplyVO" parameterType="string">
+		SELECT reply_id replyId, writer replyWriter, movieId movieId, content replyContent, createdAt createdAt
+		FROM movie.Reply
+		WHERE movieId = #{movieId}
+	</select>
+	
+	<delete id="deleteOneReply" parameterType="string">
+    	DELETE FROM movie.Reply
+		WHERE reply_id = #{replyId}
+    </delete>
+    
+</mapper>

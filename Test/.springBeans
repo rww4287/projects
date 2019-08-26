@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.9.9.201906180643-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[true]]></enableImports>
+	<configs>
+		<config>src/main/webapp/WEB-INF/spring/userContext.xml</config>
+		<config>src/main/java/com/spring/hashtag/dao/sql/hashTagDaoSql.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/hashtagContext.xml</config>
+	</configs>
+	<autoconfigs>
+		<config>src/main/webapp/WEB-INF/spring/movieContext.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/applicationContext.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/rootContext.xml</config>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

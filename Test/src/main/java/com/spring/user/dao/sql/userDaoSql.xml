@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDao">
+
+
+	<resultMap type="UserVO" id="UserMap">
+		<id column="id" property="userId"/>
+		<result column="name" property="userName"/>
+		<result column="email" property="userEmail"/>
+		<result column="password" property="userPassword"/>
+		<result column="salt" property="salt"/>
+
+	</resultMap>
+
+
+    <insert id="insertOneUser" parameterType="UserVO">
+ 		INSERT INTO movie.users
+				(id, name, email, password, salt, createdAt, updatedAt)
+				VALUES(DEFAULT , #{userName}, #{userEmail}, #{userPassword}, #{salt}, now(), now());
+    </insert>
+    
+    <select id="selectOneUser" parameterType="UserVO" resultType="UserVO">
+   		SELECT id userId, name userName, email userEmail, password userPassword, salt salt
+		FROM movie.users
+		WHERE email= #{userEmail} 
+		AND password= #{userPassword}
+    </select>
+     
+     <select id="selectSaltByEmail" parameterType="String" resultType="string">
+   		SELECT salt salt
+		FROM movie.users
+		WHERE email= #{userEmail} 
+    </select>
+    
+</mapper>

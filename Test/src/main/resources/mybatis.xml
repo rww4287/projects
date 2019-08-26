@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+         "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.spring.test.vo.MovieVO" alias="MovieVO"/>
+		<typeAlias type="com.spring.test.vo.ReplyVO" alias="ReplyVO"/>
+		<typeAlias type="com.spring.user.vo.UserVO" alias="UserVO"/>
+		<typeAlias type="com.spring.hashtag.vo.HashTagVO" alias="HashTagVO"/>
+		<typeAlias type="com.spring.hashtag.vo.PopularHashTagVO" alias="PopularHashTagVO"/>
+	</typeAliases>
+    <mappers>
+        <mapper resource="/com/spring/test/dao/sql/movieDaoSql.xml" />
+        <mapper resource="/com/spring/user/dao/sql/userDaoSql.xml" />
+        <mapper resource="/com/spring/hashtag//dao/sql/hashTagDaoSql.xml" />
+    </mappers>
+
+</configuration>

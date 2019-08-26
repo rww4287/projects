@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HashTagDao">
+
+
+	<insert id="insertOneHashTag" parameterType="HashTagVO">
+		INSERT INTO movie.hashtag
+				 	(movieId, content, id)
+					VALUES(#{movieId}, #{content}, DEFAULT);
+	</insert>
+	
+	<select id="selectAllHashTagByMovieId" parameterType="String" resultType="HashTagVO">
+		SELECT movieId, content, id
+		FROM movie.hashtag
+		WHERE movieId = #{movieId}
+	</select>
+	
+	
+	<select id="selectAllMovieIdByContent" parameterType="String" resultType="String">
+		SELECT movieId
+		FROM movie.hashtag
+		WHERE content = #{content}
+	</select>
+	
+	<select id="selectPopularHashTags" resultType="PopularHashTagVO">
+		SELECT content, COUNT(*) count
+		FROM movie.hashtag
+		GROUP BY content
+	</select>
+	 
+ 	<delete id="deleteHashTagByMovieId" parameterType="string">
+		DELETE FROM movie.hashtag
+		WHERE movieId=#{movieId};
+	</delete> 
+
+</mapper>
