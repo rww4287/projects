@@ -10,14 +10,7 @@
 	$().ready(function(){
 		
 		//alert("dfds");
-		$("#hashTagBtn").click(function(){
-			if($("#contentDiv").css('display') == 'none'){
-				$("#contentDiv").css('display','block');
-			} else if ($("#contentDiv").css('display') == 'block'){
-				$("#contentDiv").css('display', 'none');
-			}
-			
-		});
+
 		
 		$(".hashClass").click(function(){
 			var keyword = $(this).data('keyword');
@@ -27,6 +20,8 @@
 					"action" : "<c:url value="/movie"/>"
 				}).submit();   
 		});
+		
+
 
 	});
 </script>
@@ -68,27 +63,7 @@
 <body>  
 	<jsp:include page="../common/top.jsp"></jsp:include>
 	
-	 <li role="presentation"> <li role="presentation"><a href="javascript:void(0)" id="hashTagBtn">해시태그</a></li>
-	</ul>
-		</ul>
-		<div id="contentDiv" style="width:200px; height: 200px; display: none; margin-top: 20px;">
-			<script type="text/javascript">
-				var contentArray = [];
-				var sizeArray = [];
-				
-				<c:forEach items="${popularHashTagList}" var="popularHashTag">
-					contentArray.push("${popularHashTag.content}");
-				</c:forEach>
-				
-				<c:forEach items="${popularHashTagList}" var="popularHashTag">
-					sizeArray.push("${popularHashTag.count}");
-				</c:forEach>
-				
-				for ( var i in contentArray) {
-					document.write("<a href='#' class='hash t" + sizeArray[i] + "' data-keyword='" + contentArray[i] + "' style='font-family: 'Nanum Pen Script''>"+ contentArray[i] + "</a>\n");
-				}
-			</script>
-		</div> 
+
 	<div class="row">
 		<c:forEach items="${movieList}" var="movie">
 		  <div class="col-xs-4">

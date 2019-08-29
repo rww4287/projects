@@ -75,8 +75,10 @@
 	      <div class="caption">
 	        <h3>${movie.movieName}</h3>
 	        <p>${movie.movieYear} 개봉 | ${movie.movieDirector}감독 </p>
-	        <p><a href="<c:url value="/movie/delete/${movie.movieId}"/>" class="btn btn-default" role="button">delete </a>
-	        <a href="<c:url value="/movie/update/${movie.movieId}"/>" class="btn btn-default" role="button">update</a></p>
+	        <c:if test="${sessionScope._USER_.userEmail eq movie.movieWriter}"> 
+	        	<p><a href="<c:url value="/movie/delete/${movie.movieId}"/>" class="btn btn-default" role="button">delete </a>
+	        	<a href="<c:url value="/movie/update/${movie.movieId}"/>" class="btn btn-default" role="button">update</a></p>
+	        	</c:if>
 	        <c:forEach items="${movie.hashTagList}" var="hashTag">
 	        	<a href="javascript:void(0)" class="hashClass" data-keyword="${hashTag.content}" >#${hashTag.content}</a> 
 	        </c:forEach>
@@ -90,13 +92,13 @@
  	</form> 
 	
 	<div style="margin-left: 20px">
-	<form class="replyForm">
-		<c:forEach items="${replyList}" var="reply">
-			<input type="hidden" data-id="${reply.replyId}">
-			${reply.replyWriter} | 	${reply.replyContent} (${reply.createdAt}) 
-			<c:if test="${sessionScope._USER_.userName eq reply.replyWriter}"> <a href="javascript:void(0)" data-id="${reply.replyId}" class="deleteReply" style="margin-left: 5px">delete</a></c:if><br/>
-		</c:forEach>
-	</form>
+		<form class="replyForm">
+			<c:forEach items="${replyList}" var="reply">
+				<input type="hidden" data-id="${reply.replyId}">
+				${reply.replyWriter} | 	${reply.replyContent} (${reply.createdAt}) 
+				<c:if test="${sessionScope._USER_.userName eq reply.replyWriter}"> <a href="javascript:void(0)" data-id="${reply.replyId}" class="deleteReply" style="margin-left: 5px">delete</a></c:if><br/>
+			</c:forEach>
+		</form>
 	</div><br/>
 	<c:if test="${!empty sessionScope._USER_.userId}">
 	<form id="replyForm" style="margin-left: 20px">	

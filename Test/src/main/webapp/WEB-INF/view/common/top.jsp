@@ -20,12 +20,24 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
 	$().ready(function(){
-		var target = $("ul > li"); 
- 		target.find("a").click(function(){
- 			console.log("a클 릭 ");
-/*  			target.removeClass("active");
-			$(this).parent().addClass("active");  */
- 		})
+		
+		$("#hashTagBtn").click(function(){
+			if($("#contentDiv").css('display') == 'none'){
+				$("#contentDiv").css('display','block');
+			} else if ($("#contentDiv").css('display') == 'block'){
+				$("#contentDiv").css('display', 'none');
+			}
+			
+		});
+		
+		$(".hash").click(function(){
+			var keyword = $(this).data('keyword');
+			console.log(keyword);
+			$("#keyword").val(keyword);
+ 	 			$("#hashSearchForm").attr({
+					"action" : "<c:url value="/movie"/>"
+				}).submit();   
+		});
 
 	});
 </script>
@@ -42,7 +54,30 @@
 	  <li role="presentation"><a href="<c:url value="/movie/user/logout"/>">Logout</a></li>
 	  </c:if>
 	  <li role="presentation"><a href="<c:url value="/mail/send"/>">문의하기</a></li>
-
+	 <li role="presentation"> <li role="presentation"><a href="javascript:void(0)" id="hashTagBtn">해시태그</a></li>
+	</ul>
+		<div id="contentDiv" style="width:200px; height: 200px; display: none; margin-top: 20px;">
+			<script type="text/javascript">
+				var contentArray = [];
+				var sizeArray = [];
+				
+				<c:forEach items="${popularHashTagList}" var="popularHashTag">
+					contentArray.push("${popularHashTag.content}");
+				</c:forEach>
+				
+				<c:forEach items="${popularHashTagList}" var="popularHashTag">
+					sizeArray.push("${popularHashTag.count}");
+				</c:forEach>
+				
+				for ( var i in contentArray) {
+					document.write("<a href='#' class='hash t" + sizeArray[i] + "' data-keyword='" + contentArray[i] + "' style='font-family: 'Nanum Pen Script''>"+ contentArray[i] + "</a>\n");
+				}
+			</script>
+		</div> 
+		
+	<form id="hashSearchForm">
+ 	    <input type="hidden" name="keyword" id="keyword">
+ 	</form> 
 
 </body>
 </html>

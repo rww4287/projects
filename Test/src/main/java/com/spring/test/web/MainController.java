@@ -12,10 +12,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +31,7 @@ import com.spring.test.service.MainService;
 import com.spring.test.vo.MovieSearchVO;
 import com.spring.test.vo.MovieVO;
 import com.spring.test.vo.ReplyVO;
+import com.spring.user.vo.UserVO;
 import com.google.gson.Gson;
 
 
@@ -47,10 +50,22 @@ public class MainController {
 		this.mailSender = mailSender;
 	}
 	
+	@ModelAttribute("popularHashTagList")
+	public List<PopularHashTagVO> referencepopularHashTagList() {
+
+		List<PopularHashTagVO> popularHashTagList = mainService.getPopularHashTags();
+
+		return popularHashTagList;
+
+	}
+
+	
 	@RequestMapping(value = "/mail/send", method= RequestMethod.GET)
-	public String viewMailSending() {
-		
-		return "/mail/write";
+	public ModelAndView viewMailSending() {
+		ModelAndView view = new ModelAndView();
+
+		view.setViewName("mail/write");
+		return view;
 	}
 
 	@RequestMapping(value = "/mail/send", method= RequestMethod.POST)
@@ -122,10 +137,7 @@ public class MainController {
 		
 		ModelAndView view = new ModelAndView();
 	
-		List<PopularHashTagVO> popularHashTagList = mainService.getPopularHashTags();
-
 		view.addObject("movieList",movieList);
-		view.addObject("popularHashTagList",popularHashTagList);
 		view.setViewName("movie/list");
 		
 		return view;
@@ -138,12 +150,11 @@ public class MainController {
 		MovieVO movie = mainService.getOneMovie(movieId);
 	
 		List<ReplyVO> replyList = mainService.getRepliesByMovieId(movieId);
-		
+
 		ModelAndView view = new ModelAndView();
 		
 		view.addObject("movie",movie);
 		view.addObject("replyList",replyList);
-		
 		view.setViewName("movie/detail");
 		
 		return view;
@@ -168,11 +179,13 @@ public class MainController {
 	
 	
 	@RequestMapping(value = "/movie/write", method= RequestMethod.POST)
-	public String doWritePage(MovieVO movieVO) {
-	
-		String movieId = mainService.addMovie(movieVO);
+	public String doWritePage(MovieVO movieVO, HttpServletRequest request) {
+		HttpSession session = request.getSession();
 		
-
+		UserVO user = (UserVO) session.getAttribute("_USER_");
+		
+		movieVO.setMovieWriter(user.getUserId());
+		String movieId = mainService.addMovie(movieVO);
 	
 		if( movieId != null && movieId != "") {
 			return "redirect:/movie";

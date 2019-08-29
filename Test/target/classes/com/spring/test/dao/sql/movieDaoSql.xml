@@ -23,7 +23,7 @@
     </select>
    
     <select id="getOneMovie" resultType="MovieVO" parameterType="string">
-		SELECT movieId movieId, name movieName, `year` movieYear, director movieDirector, poster moviePoster
+		SELECT movieId movieId, name movieName, `year` movieYear, director movieDirector, poster moviePoster, writer movieWriter
 		FROM movie.movies
 		WHERE movieId = #{movieId}
     </select>
@@ -34,8 +34,8 @@
     </delete>
 
     <insert id="insertOneMovie"  useGeneratedKeys="true" keyProperty="movieId" parameterType="MovieVO">
-    	INSERT INTO movie.movies (name, `year`, director, poster, createdAt, updatedAt)
-				VALUES(#{movieName}, #{movieYear}, #{movieDirector}, #{moviePoster}, now() , now());
+    	INSERT INTO movie.movies (name, `year`, director, poster, createdAt, updatedAt, writer)
+				VALUES(#{movieName}, #{movieYear}, #{movieDirector}, #{moviePoster}, now() , now(), #{movieWriter});
     </insert>
   
     <update id="updateOneMovie" parameterType="MovieVO">

@@ -13,6 +13,7 @@ public class MovieVO {
 	private String moviePoster;
 	private String hashTag;
 	private List<HashTagVO> hashTagList;
+	private String movieWriter;
 	
 	public String getMovieId() {
 		return movieId;
@@ -56,8 +57,13 @@ public class MovieVO {
 	public void setHashTagList(List<HashTagVO> hashTagList) {
 		this.hashTagList = hashTagList;
 	}
+	public String getMovieWriter() {
+		return movieWriter;
+	}
+	public void setMovieWriter(String movieWriter) {
+		this.movieWriter = movieWriter;
+	}
 
-	
 	
 	
 }

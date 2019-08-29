@@ -3,6 +3,7 @@ package com.spring.user.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.spring.hashtag.vo.PopularHashTagVO;
+import com.spring.test.service.MainService;
 import com.spring.test.vo.MovieVO;
 import com.spring.user.service.UserService;
 import com.spring.user.vo.UserVO;
@@ -25,15 +28,29 @@ import com.spring.user.vo.UserVO;
 public class UserController {
 
 	private UserService userService;
+	private MainService mainService;
 	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
+	public void setMainService(MainService mainService) {
+		this.mainService = mainService;
+	}
+	
+	@ModelAttribute("popularHashTagList")
+	public List<PopularHashTagVO> referencepopularHashTagList() {
+
+		List<PopularHashTagVO> popularHashTagList = mainService.getPopularHashTags();
+
+		return popularHashTagList;
+
+	}
 	
 	@RequestMapping(value="/movie/user/signUp", method= RequestMethod.GET)
-	public String viewSignUpPage() {
-		
-		return "user/signup";
+	public ModelAndView viewSignUpPage() {
+		ModelAndView view = new ModelAndView();
+		view.setViewName("user/signup");
+		return view;
 	}
 	
 	@RequestMapping(value="/movie/user/signUp", method= RequestMethod.POST)
@@ -42,7 +59,7 @@ public class UserController {
 		if (userVO.getUserId() == "" || userVO.getUserEmail() == "" || userVO.getUserPassword() == "") {
 			return;
 		}
-		
+
 		boolean isSuccess = userService.addOnerUser(userVO);
 		
 		if(isSuccess) {
@@ -73,8 +90,12 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/movie/user/login", method= RequestMethod.GET)
-	public String viewLoginPage() {
-		return "user/login";
+	public ModelAndView viewLoginPage() {
+		ModelAndView view = new ModelAndView();
+		
+		view.setViewName("user/login");
+		
+		return view;
 	}
 	
 	@RequestMapping(value="/movie/user/login", method= RequestMethod.POST)
