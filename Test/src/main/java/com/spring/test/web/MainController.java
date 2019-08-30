@@ -27,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.hashtag.biz.HashTagBiz;
 import com.spring.hashtag.vo.HashTagVO;
 import com.spring.hashtag.vo.PopularHashTagVO;
+import com.spring.like.vo.LikeVO;
 import com.spring.test.service.MainService;
 import com.spring.test.vo.MovieSearchVO;
 import com.spring.test.vo.MovieVO;
@@ -145,16 +146,40 @@ public class MainController {
 	
 	
 	@RequestMapping(value = "/movie/detail/{movieId}")
-	public ModelAndView viewDetailPage(@PathVariable String movieId) {
-	
+	public ModelAndView viewDetailPage(@PathVariable String movieId, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		
+		UserVO user = (UserVO) session.getAttribute("_USER_");
+		LikeVO likeVO = new LikeVO();
+		likeVO.setMovieId(movieId);
+		
+		
+		if(user != null) {
+			likeVO.setUserEmail(user.getUserEmail());
+		} else {
+			likeVO.setUserEmail("");
+		}
+
 		MovieVO movie = mainService.getOneMovie(movieId);
 	
 		List<ReplyVO> replyList = mainService.getRepliesByMovieId(movieId);
-
-		ModelAndView view = new ModelAndView();
+		LikeVO like = mainService.getLikeCheckByLikeVO(likeVO);
+		boolean likeCheck;
+		int likeCount = mainService.getLikeCountByMovieId(movieId);
 		
+		ModelAndView view = new ModelAndView();
+	
+		if(like != null) {
+			view.addObject("like", like);
+			likeCheck = true;
+			
+		} else {
+			likeCheck = false;
+		}
 		view.addObject("movie",movie);
 		view.addObject("replyList",replyList);
+		view.addObject("likeCheck",likeCheck);
+		view.addObject("likeCount",likeCount);
 		view.setViewName("movie/detail");
 		
 		return view;
@@ -263,6 +288,71 @@ public class MainController {
 		
 		if(isSuccess) {
 		 	map.put("status","success");
+		} else {
+			map.put("status","fail");
+		}
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		
+		return json;
+	}
+	
+	@RequestMapping(value = "/movie/like/plus", method= RequestMethod.POST)
+	@ResponseBody
+	public String doLikePlus(HttpServletRequest req) {
+		
+		HttpSession session = req.getSession();
+		UserVO user = (UserVO) session.getAttribute("_USER_");
+		
+		String movieId = req.getParameter("movieId");
+		String userEmail = user.getUserEmail();
+		
+		
+		LikeVO likeVO = new LikeVO();
+		likeVO.setMovieId(movieId);
+		likeVO.setUserEmail(userEmail);
+		
+		boolean isSuccess = mainService.addOneLike(likeVO);
+		int likeCount = mainService.getLikeCountByMovieId(movieId);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(isSuccess) {
+		 	map.put("status","success");
+		 	map.put("likeCount", likeCount);
+		} else {
+			map.put("status","fail");
+		}
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		
+		return json;
+	}
+	
+	@RequestMapping(value = "/movie/like/minus", method= RequestMethod.POST)
+	@ResponseBody
+	public String doLikeMinus(HttpServletRequest req) {
+
+		HttpSession session = req.getSession();
+		UserVO user = (UserVO) session.getAttribute("_USER_");
+		
+		String movieId = req.getParameter("movieId");
+		String userEmail = user.getUserEmail();
+		
+		
+		LikeVO likeVO = new LikeVO();
+		
+		likeVO.setMovieId(movieId);
+		likeVO.setUserEmail(userEmail);
+		
+		boolean isSuccess = mainService.removeOneLike(likeVO);
+		int likeCount = mainService.getLikeCountByMovieId(movieId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(isSuccess) {
+		 	map.put("status","success");
+		 	map.put("likeCount", likeCount);
 		} else {
 			map.put("status","fail");
 		}

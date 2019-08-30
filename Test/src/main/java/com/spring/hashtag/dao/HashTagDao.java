@@ -12,4 +12,5 @@ public interface HashTagDao {
 	public List<String> selectAllMovieIdByContent(String content);
 	public List<PopularHashTagVO> selectPopularHashTags();
 	public int deleteHashTagByMovieId(String movieId);
+
 }

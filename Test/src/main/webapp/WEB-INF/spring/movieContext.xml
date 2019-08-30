@@ -18,6 +18,7 @@
 		<bean id="mainServiceImpl" class="com.spring.test.service.MainServiceImpl">
 			<property name="mainBiz" ref="mainBizImpl"></property>
 			<property name="hashTagBiz" ref="hashTagBizImpl"></property>
+ 			<property name="likeBiz" ref="likeBizImpl"></property>
 		</bean>
 
 		

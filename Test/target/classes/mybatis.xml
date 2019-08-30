@@ -9,11 +9,13 @@
 		<typeAlias type="com.spring.user.vo.UserVO" alias="UserVO"/>
 		<typeAlias type="com.spring.hashtag.vo.HashTagVO" alias="HashTagVO"/>
 		<typeAlias type="com.spring.hashtag.vo.PopularHashTagVO" alias="PopularHashTagVO"/>
+ 		<typeAlias type="com.spring.like.vo.LikeVO" alias="LikeVO"/>
 	</typeAliases>
     <mappers>
         <mapper resource="/com/spring/test/dao/sql/movieDaoSql.xml" />
         <mapper resource="/com/spring/user/dao/sql/userDaoSql.xml" />
         <mapper resource="/com/spring/hashtag//dao/sql/hashTagDaoSql.xml" />
+        <mapper resource="/com/spring/like/dao/sql/likeDaoSql.xml" />
     </mappers>
 
 </configuration>

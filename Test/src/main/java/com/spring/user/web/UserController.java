@@ -78,7 +78,7 @@ public class UserController {
 			try {
 				response.setContentType("text/html; charset=UTF-8");
 				PrintWriter out = response.getWriter();
-				out.println("<script>alert('회원가입에 실패 하였습니다'); window.location.href = \"http://localhost:8080/test/movie/user/signUp\"; </script>");
+				out.println("<script>alert('회원가입에 실패 하였습니다'); </script>");
 				out.flush();
 				out.close();
 				response.sendRedirect("/test/movie/user/signUp");
@@ -99,11 +99,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/movie/user/login", method= RequestMethod.POST)
-	public String doLoginPage(UserVO userVO, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doLoginPage(UserVO userVO, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 	
 		if (userVO.getUserId() == "" || userVO.getUserEmail() == "" || userVO.getUserPassword() == "") {
-			return "redirect:/movie/user/login";
+			return;
 		}
 	
 		UserVO user = userService.getOneUser(userVO);
@@ -111,9 +111,21 @@ public class UserController {
 		if(user != null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("_USER_", user);
-			return "redirect:/movie";
+
+			PrintWriter out = response.getWriter();
+			out.println("<script> window.location.href = \"http://localhost:8080/test/movie\"; </script>");
+			out.flush();
+			out.close();
 		} else {
-            return "redirect:/movie/user/login";
+			try {
+				response.setContentType("text/html; charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.println("<script>alert('로그인에 실패 하였습니다! 아이디와 비밀번호를 확인해 주세요 '); window.location.href = \"http://localhost:8080/test/movie/user/login\"; </script>");
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
 		}
 	
 	}

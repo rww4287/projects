@@ -60,6 +60,41 @@
 		});
 	
 
+		$(".likeBtn").click(function(){
+			
+			var likeVal = $("#likeCheck").val();
+			var movieId = $("#movieId").val();
+			
+ 			if(likeVal == "false") {
+ 				$.post("<c:url value="/movie/like/plus"/>", {
+ 					"movieId" : movieId
+ 				}, function (response) {
+ 					var res = JSON.parse(response);
+ 					if(res.status == "success"){
+ 						$(".likeBtn").val("♥");
+ 						console.log(res.likeCount);
+ 						$("#likeCount").html(res.likeCount);
+ 						$("#likeCheck").val("true");
+ 					}					
+ 				});
+				
+			} else {
+				var likeId = 
+				$.post("<c:url value="/movie/like/minus"/>", {
+					"movieId" : movieId
+ 				}, function (response) {
+ 					var res = JSON.parse(response);
+ 					if(res.status == "success"){
+ 						$(".likeBtn").val("♡");
+ 						console.log(res.likeCount);
+ 						$("#likeCount").html(res.likeCount);
+ 						$("#likeCheck").val("false");
+ 						
+ 					}					
+ 				});
+			} 
+		});
+		
 
 	});
 </script>
@@ -90,6 +125,7 @@
 	<form id="hashSearchForm">
  	    <input type="hidden" name="keyword" id="keyword">
  	</form> 
+<%-- 	<input type="hidden" id="like" value="${like}"/> --%>
 	
 	<div style="margin-left: 20px">
 		<form class="replyForm">
@@ -100,7 +136,15 @@
 			</c:forEach>
 		</form>
 	</div><br/>
+ 	좋아요 : <span id="likeCount">${likeCount}</span>
 	<c:if test="${!empty sessionScope._USER_.userId}">
+		<c:if test="${!likeCheck}">
+			<input style="margin-left: 20px; background-color: transparent; border-color: transparent;" type="button" class="likeBtn" value="♡"/>
+		</c:if>
+		<c:if test="${likeCheck}">
+			<input style="margin-left: 20px; background-color: transparent; border-color: transparent;" type="button" class="likeBtn" value="♥"/>
+		</c:if>
+	<input type="hidden" id="likeCheck" value="${likeCheck}"/>
 	<form id="replyForm" style="margin-left: 20px">	
 		<input type="hidden" id="replyWriter" value="${sessionScope._USER_.userName}"> 
 		<input style="width: 50%;" type="text" id="replyContent" placeholder="댓글 내용 " > 

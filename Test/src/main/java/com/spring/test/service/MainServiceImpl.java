@@ -8,6 +8,8 @@ import java.util.List;
 import com.spring.hashtag.biz.HashTagBiz;
 import com.spring.hashtag.vo.HashTagVO;
 import com.spring.hashtag.vo.PopularHashTagVO;
+import com.spring.like.biz.LikeBiz;
+import com.spring.like.vo.LikeVO;
 import com.spring.test.biz.MainBiz;
 import com.spring.test.vo.MovieSearchVO;
 import com.spring.test.vo.MovieVO;
@@ -17,6 +19,7 @@ public class MainServiceImpl implements MainService{
 
 	private MainBiz mainBiz;
 	private HashTagBiz hashTagBiz;
+	private LikeBiz likeBiz;
 	
 	public void setMainBiz(MainBiz mainBiz) {
 		this.mainBiz= mainBiz;
@@ -24,6 +27,9 @@ public class MainServiceImpl implements MainService{
 	}
 	public void setHashTagBiz(HashTagBiz hashTagBiz) {
 		this.hashTagBiz = hashTagBiz;
+	}
+	public void setLikeBiz(LikeBiz likeBiz) {
+		this.likeBiz = likeBiz;
 	}
 	
 	@Override
@@ -127,8 +133,23 @@ public class MainServiceImpl implements MainService{
 	
 		return hashTagBiz.getPopularHashTags();
 	}
-	
-	
+	@Override
+	public boolean addOneLike(LikeVO likeVO) {
+		return likeBiz.addOneLike(likeVO);
+	}
+	@Override
+	public boolean removeOneLike(LikeVO likeVO) {
+		return likeBiz.removeOneLike(likeVO);
+	}
+	@Override
+	public LikeVO getLikeCheckByLikeVO(LikeVO likeVO) {
+		return likeBiz.getLikeCheckByLikeVO(likeVO);
+	}
+	@Override
+	public int getLikeCountByMovieId(String movieId) {
+		return likeBiz.getLikeCountByMovieId(movieId);
+	}
+
 
 
 }
